@@ -62,9 +62,9 @@ abstract class NormalizingDataProxy extends GraphQLDataProxy {
     Request request, {
     bool optimistic = true,
   }) =>
-      denormalize(
-        reader: (dataId) => readNormalized(dataId, optimistic: optimistic),
-        query: request.operation.document,
+      denormalizeOperation(
+        read: (dataId) => readNormalized(dataId, optimistic: optimistic),
+        document: request.operation.document,
         operationName: request.operation.operationName,
         variables: sanitizeVariables(request.variables),
         typePolicies: typePolicies,
@@ -80,8 +80,8 @@ abstract class NormalizingDataProxy extends GraphQLDataProxy {
     bool optimistic = true,
   }) =>
       denormalizeFragment(
-        reader: (dataId) => readNormalized(dataId, optimistic: optimistic),
-        fragment: fragment,
+        read: (dataId) => readNormalized(dataId, optimistic: optimistic),
+        document: fragment,
         idFields: idFields,
         fragmentName: fragmentName,
         variables: sanitizeVariables(variables),
@@ -96,9 +96,9 @@ abstract class NormalizingDataProxy extends GraphQLDataProxy {
     Map<String, dynamic> data,
     bool broadcast = true,
   }) {
-    normalize(
-      writer: (dataId, value) => writeNormalized(dataId, value),
-      query: request.operation.document,
+    normalizeOperation(
+      write: (dataId, value) => writeNormalized(dataId, value),
+      document: request.operation.document,
       operationName: request.operation.operationName,
       variables: sanitizeVariables(request.variables),
       data: data,
@@ -119,8 +119,9 @@ abstract class NormalizingDataProxy extends GraphQLDataProxy {
     bool broadcast = true,
   }) {
     normalizeFragment(
-      writer: (dataId, value) => writeNormalized(dataId, value),
-      fragment: fragment,
+      write: (dataId, value) => writeNormalized(dataId, value),
+      read: (dataId) => null,
+      document: fragment,
       idFields: idFields,
       data: data,
       fragmentName: fragmentName,
